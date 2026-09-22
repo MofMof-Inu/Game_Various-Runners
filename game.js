@@ -340,15 +340,19 @@ function update(deltaTime) {
 // 後でここを調整できます。
 
 function isColliding(a, b) {
-  // 少しだけ当たり判定を小さくする
-  const marginX = 25;
-  const marginY = 20;
+  // 主人公側の当たり判定
+  const playerMarginX = 25;
+  const playerMarginY = 20;
+
+  // 障害物側の当たり判定
+  const obstacleMarginX = 15;
+  const obstacleMarginY = 15;
 
   return (
-    a.x + marginX < b.x + b.width - marginX &&
-    a.x + a.width - marginX > b.x + marginX &&
-    a.y + marginY < b.y + b.height - marginY &&
-    a.y + a.height - marginY > b.y + marginY
+    a.x + playerMarginX < b.x + b.width - obstacleMarginX &&
+    a.x + a.width - playerMarginX > b.x + obstacleMarginX &&
+    a.y + playerMarginY < b.y + b.height - obstacleMarginY &&
+    a.y + a.height - playerMarginY > b.y + obstacleMarginY
   );
 }
 
