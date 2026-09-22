@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.1";
+const GAME_VERSION = "v0.1.2";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -22,7 +22,7 @@ const GAME_CONFIG = {
 
   // 地面の高さ
   // ここを変更すると、キャラクターや障害物の地面位置を変更できます。
-  groundY: 348,
+  groundY: 346,
 
   // ゲーム開始時の速度
   obstacleSpeed: 8,
