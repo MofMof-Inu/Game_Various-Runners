@@ -30,7 +30,7 @@ const GAME_CONFIG = {
   speedIncrease: 0.0005,
 
   // 重力
-  gravity: 0.8,
+  gravity: 0.9,
 
   // ジャンプの強さ
   jumpPower: -14,
@@ -345,8 +345,8 @@ function isColliding(a, b) {
   const playerMarginY = 20;
 
   // 障害物側の当たり判定
-  const obstacleMarginX = 15;
-  const obstacleMarginY = 15;
+  const obstacleMarginX = 30;
+  const obstacleMarginY = 30;
 
   return (
     a.x + playerMarginX < b.x + b.width - obstacleMarginX &&
