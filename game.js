@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.21";
+const GAME_VERSION = "v0.1.22";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -381,17 +381,49 @@ for (const obstacle of obstacles) {
   }
 }
 
-// 障害物がなくなったら、新しいものを作る
-if (rightmostObstacle === null) {
-  rightmostObstacle = {
-    x: GAME_CONFIG.width,
-    y: GAME_CONFIG.groundY - GAME_CONFIG.obstacleHeight,
-    width: 64,
-    height: GAME_CONFIG.obstacleHeight,
-    image: images.obstacle
-  };
+// 55秒までは新しい障害物を追加する
+if (gameElapsedTime < 15) {
 
-  obstacles.push(rightmostObstacle);
+  // 障害物がなくなったら、新しいものを作る
+  if (rightmostObstacle === null) {
+    rightmostObstacle = {
+      x: GAME_CONFIG.width,
+      y: GAME_CONFIG.groundY - GAME_CONFIG.obstacleHeight,
+      width: 64,
+      height: GAME_CONFIG.obstacleHeight,
+      image: images.obstacle
+    };
+
+    obstacles.push(rightmostObstacle);
+  }
+
+  // 一番右の障害物が十分近づいたら、次を追加
+  if (
+    rightmostObstacle.x <
+    GAME_CONFIG.width + 250
+  ) {
+    const obstacleGap = getRandomObstacleGap();
+
+    const useSecondObstacle = Math.random() < 0.5;
+
+    const newObstacle = {
+      x: rightmostObstacle.x +
+         rightmostObstacle.width +
+         obstacleGap,
+
+      y: GAME_CONFIG.groundY - GAME_CONFIG.obstacleHeight,
+
+      width: useSecondObstacle ? 100 : 64,
+
+      height: GAME_CONFIG.obstacleHeight,
+
+      image: useSecondObstacle
+        ? images.obstacle2
+        : images.obstacle
+    };
+
+    obstacles.push(newObstacle);
+  }
 }
 
 // 一番右の障害物が十分近づいたら、次を追加
