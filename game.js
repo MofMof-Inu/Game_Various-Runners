@@ -30,10 +30,10 @@ const GAME_CONFIG = {
   speedIncrease: 0.0005,
 
   // 重力
-  gravity: 1,
+  gravity: 0.85,
 
   // ジャンプの強さ
-  jumpPower: -17,
+  jumpPower: -14.5,
 
   // キャラクターの表示サイズ
   playerWidth: 128,
