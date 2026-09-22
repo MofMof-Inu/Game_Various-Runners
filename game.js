@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.23";
+const GAME_VERSION = "v0.1.24";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -298,7 +298,7 @@ function update(deltaTime) {
 
   scoreElement.textContent = Math.floor(score);
 
-  if (gameElapsedTime >= 55) {
+  if (gameElapsedTime >= 15) {
     console.log("55秒経過！");
   }
 
