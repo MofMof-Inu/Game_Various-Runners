@@ -14,6 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
+const GAME_VERSION = "v0.1.0";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -433,6 +434,11 @@ ctx.drawImage(
   player.width,
   player.height
 );
+
+// 開発用バージョン表示
+ctx.fillStyle = "black";
+ctx.font = "14px sans-serif";
+ctx.fillText(GAME_VERSION, 10, 20);
   
 }
 
