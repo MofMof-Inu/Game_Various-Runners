@@ -161,18 +161,18 @@ let backgroundX = 0;
 function getRandomObstacleGap() {
   const random = Math.random();
 
-  // 30%：密
-  if (random < 0.3) {
-    return 450 + Math.random() * 150;
+  // 45%：密
+  if (random < 0.45) {
+    return 350 + Math.random() * 150;
   }
 
   // 40%：普通
-  if (random < 0.7) {
-    return 600 + Math.random() * 200;
+  if (random < 0.85) {
+    return 500 + Math.random() * 200;
   }
 
-  // 30%：疎
-  return 900 + Math.random() * 300;
+  // 15%：疎
+  return 800 + Math.random() * 200;
 }
 
 // ============================================================
