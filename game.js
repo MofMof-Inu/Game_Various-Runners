@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.20";
+const GAME_VERSION = "v0.1.21";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -188,7 +188,7 @@ function startGame() {
 
 score = 0;
 gameElapsedTime = 0;
-gameSpeed = GAME_CONFIG.obstacleSpe
+gameSpeed = GAME_CONFIG.obstacleSpeed;
   
   player.y = GAME_CONFIG.groundY - player.height;
   player.velocityY = 0;
@@ -301,11 +301,6 @@ function update(deltaTime) {
   if (gameElapsedTime >= 55) {
     console.log("55秒経過！");
   }
-
-  gameSpeed = Math.min(
-    gameSpeed + deltaTime * GAME_CONFIG.speedIncrease,
-    GAME_CONFIG.maxObstacleSpeed
-  );
 
 // --------------------------------------------
 // ゲーム速度
