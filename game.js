@@ -401,9 +401,7 @@ function draw() {
   // 障害物
   // --------------------------------------------
 
-ctx.fillStyle = "red";
-ctx.fillRect(player.x, player.y, player.width, player.height);
-  
+
   ctx.drawImage(
     images.obstacle,
     obstacle.x,
@@ -427,6 +425,9 @@ ctx.fillRect(player.x, player.y, player.width, player.height);
     playerImage = images.playerRun2;
   }
 
+ctx.fillStyle = "red";
+ctx.fillRect(player.x, player.y, player.width, player.height);
+    
   ctx.drawImage(
     playerImage,
     player.x,
