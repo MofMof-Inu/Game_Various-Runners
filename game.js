@@ -30,7 +30,7 @@ const GAME_CONFIG = {
   speedIncrease: 0.0005,
 
   // 重力
-  gravity: 0.7,
+  gravity: 0.8,
 
   // ジャンプの強さ
   jumpPower: -15,
