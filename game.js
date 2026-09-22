@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.18";
+const GAME_VERSION = "v0.1.19";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -163,20 +163,19 @@ let backgroundX = 0;
 function getRandomObstacleGap() {
   const random = Math.random();
 
-  // 50%：かなり近い
-  if (random < 0.5) {
-    return 250 + Math.random() * 100;
+  // 20%：近め
+  if (random < 0.2) {
+    return 350 + Math.random() * 100;
   }
 
-  // 35%：普通
-  if (random < 0.85) {
-    return 400 + Math.random() * 150;
+  // 50%：普通
+  if (random < 0.7) {
+    return 500 + Math.random() * 150;
   }
 
-  // 15%：少し休憩
-  return 700 + Math.random() * 200;
+  // 30%：少し休憩
+  return 750 + Math.random() * 200;
 }
-
 // ============================================================
 // 8. ゲーム開始
 // ============================================================
