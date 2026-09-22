@@ -1,0 +1,120 @@
+/* ================================
+   基本設定
+   ================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #222;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+
+.game-page {
+  width: min(900px, 100%);
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.game-title {
+  margin: 0 0 15px;
+  font-size: 24px;
+}
+
+/* ================================
+   ゲーム画面
+   ================================ */
+
+.game-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #fff;
+  border: 2px solid #fff;
+}
+
+#gameCanvas {
+  display: block;
+  width: 100%;
+  height: auto;
+
+  /* ドット絵をぼかさず表示する */
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+
+  touch-action: none;
+}
+
+/* スタート・ゲームオーバー表示 */
+.game-message {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+
+.game-message.hidden {
+  display: none;
+}
+
+#messageTitle {
+  margin-bottom: 10px;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+#messageText {
+  font-size: 16px;
+}
+
+/* ================================
+   スコア・操作説明
+   ================================ */
+
+.game-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-family: monospace;
+  font-size: 18px;
+}
+
+.controls {
+  margin-top: 12px;
+  color: #ccc;
+  font-size: 13px;
+}
+
+/* スマートフォン */
+@media (max-width: 600px) {
+  .game-page {
+    padding: 10px;
+  }
+
+  .game-title {
+    font-size: 20px;
+  }
+
+  #messageTitle {
+    font-size: 24px;
+  }
+
+  #messageText {
+    font-size: 13px;
+  }
+
+  .game-info {
+    font-size: 15px;
+  }
+}
