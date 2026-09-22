@@ -21,7 +21,7 @@ const GAME_CONFIG = {
 
   // 地面の高さ
   // ここを変更すると、キャラクターや障害物の地面位置を変更できます。
-  groundY: 350,
+  groundY: 300,
 
   // ゲーム開始時の速度
   obstacleSpeed: 8,
