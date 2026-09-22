@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.6";
+const GAME_VERSION = "v0.1.7";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -26,6 +26,9 @@ const GAME_CONFIG = {
 
   // ゲーム開始時の速度
   obstacleSpeed: 8,
+
+  // ゲーム中の最高速度
+  maxObstacleSpeed: 12,
 
   // 時間経過による速度アップ
   speedIncrease: 0.0005,
@@ -254,11 +257,16 @@ function update(deltaTime) {
   scoreElement.textContent = Math.floor(score);
 
 
-  // --------------------------------------------
-  // ゲーム速度
-  // --------------------------------------------
+// --------------------------------------------
+// ゲーム速度
+// --------------------------------------------
 
-  gameSpeed += deltaTime * GAME_CONFIG.speedIncrease;
+// 時間経過で徐々に速くする
+// ただし、最高速度は maxObstacleSpeed まで
+gameSpeed = Math.min(
+  gameSpeed + deltaTime * GAME_CONFIG.speedIncrease,
+  GAME_CONFIG.maxObstacleSpeed
+);
 
 
   // --------------------------------------------
