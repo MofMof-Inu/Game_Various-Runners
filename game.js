@@ -33,7 +33,7 @@ const GAME_CONFIG = {
   gravity: 0.7,
 
   // ジャンプの強さ
-  jumpPower: -13,
+  jumpPower: -16,
 
   // キャラクターの表示サイズ
   playerWidth: 128,
