@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.5";
+const GAME_VERSION = "v0.1.6";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -457,14 +457,14 @@ function drawBackground() {
     GAME_CONFIG.height
   );
 
-  // 地面の線を直接描く
-  ctx.strokeStyle = "#000000";
-  ctx.lineWidth = 2;
+// 地面の線を直接描く
+ctx.strokeStyle = "#999999";
+ctx.lineWidth = 2;
 
-  ctx.beginPath();
-  ctx.moveTo(0, 336);
-  ctx.lineTo(GAME_CONFIG.width, 336);
-  ctx.stroke();
+ctx.beginPath();
+ctx.moveTo(0, 342);
+ctx.lineTo(GAME_CONFIG.width, 342);
+ctx.stroke();
 }
 
 
