@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.19";
+const GAME_VERSION = "v0.1.20";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -103,6 +103,7 @@ let gameState = "ready";
 // gameOver  = ゲームオーバー
 
 let score = 0;
+let gameElapsedTime = 0;
 let highScore = Number(localStorage.getItem("pixelRunnerHighScore")) || 0;
 
 let gameSpeed = GAME_CONFIG.obstacleSpeed;
@@ -185,9 +186,10 @@ function startGame() {
     return;
   }
 
-  score = 0;
-  gameSpeed = GAME_CONFIG.obstacleSpeed;
-
+score = 0;
+gameElapsedTime = 0;
+gameSpeed = GAME_CONFIG.obstacleSpe
+  
   player.y = GAME_CONFIG.groundY - player.height;
   player.velocityY = 0;
   player.isJumping = false;
@@ -291,10 +293,19 @@ function update(deltaTime) {
   // スコア
   // --------------------------------------------
 
-  score += deltaTime * 0.01;
+ score += deltaTime * 0.01;
+  gameElapsedTime += deltaTime / 1000;
 
   scoreElement.textContent = Math.floor(score);
 
+  if (gameElapsedTime >= 55) {
+    console.log("55秒経過！");
+  }
+
+  gameSpeed = Math.min(
+    gameSpeed + deltaTime * GAME_CONFIG.speedIncrease,
+    GAME_CONFIG.maxObstacleSpeed
+  );
 
 // --------------------------------------------
 // ゲーム速度
