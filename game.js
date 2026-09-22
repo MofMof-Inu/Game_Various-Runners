@@ -30,10 +30,10 @@ const GAME_CONFIG = {
   speedIncrease: 0.0005,
 
   // 重力
-  gravity: 0.5,
+  gravity: 0.7,
 
   // ジャンプの強さ
-  jumpPower: -17,
+  jumpPower: -16,
 
   // キャラクターの表示サイズ
   playerWidth: 128,
@@ -341,8 +341,8 @@ function update(deltaTime) {
 
 function isColliding(a, b) {
   // 少しだけ当たり判定を小さくする
-  const marginX = 10;
-  const marginY = 8;
+  const marginX = 25;
+  const marginY = 20;
 
   return (
     a.x + marginX < b.x + b.width - marginX &&
