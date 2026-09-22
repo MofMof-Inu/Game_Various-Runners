@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.13";
+const GAME_VERSION = "v0.1.14";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -136,16 +136,18 @@ const player = {
 // 6. 障害物
 // ============================================================
 
-const obstacle = {
-  x: GAME_CONFIG.width + 100,
-  y: GAME_CONFIG.groundY - GAME_CONFIG.obstacleHeight,
+// 複数の障害物を管理します
+const obstacles = [
+  {
+    x: GAME_CONFIG.width + 100,
+    y: GAME_CONFIG.groundY - GAME_CONFIG.obstacleHeight,
 
-  width: GAME_CONFIG.obstacleWidth,
-  height: GAME_CONFIG.obstacleHeight,
+    width: GAME_CONFIG.obstacleWidth,
+    height: GAME_CONFIG.obstacleHeight,
 
-  // 現在表示している障害物の画像
-  image: images.obstacle
-};
+    image: images.obstacle
+  }
+];
 
 
 // ============================================================
@@ -161,18 +163,18 @@ let backgroundX = 0;
 function getRandomObstacleGap() {
   const random = Math.random();
 
-  // 45%：密
-  if (random < 0.45) {
-    return 350 + Math.random() * 150;
+  // 50%：かなり近い
+  if (random < 0.5) {
+    return 250 + Math.random() * 100;
   }
 
-  // 40%：普通
+  // 35%：普通
   if (random < 0.85) {
-    return 500 + Math.random() * 200;
+    return 400 + Math.random() * 150;
   }
 
-  // 15%：疎
-  return 800 + Math.random() * 200;
+  // 15%：少し休憩
+  return 700 + Math.random() * 200;
 }
 
 // ============================================================
@@ -191,7 +193,12 @@ function startGame() {
   player.velocityY = 0;
   player.isJumping = false;
 
-  obstacle.x = GAME_CONFIG.width + 100;
+obstacles.length = 1;
+obstacles[0].x = GAME_CONFIG.width + 100;
+obstacles[0].width = 64;
+obstacles[0].image = images.obstacle;
+obstacles[0].y =
+  GAME_CONFIG.groundY - obstacles[0].height;
 
   backgroundX = 0;
 
@@ -337,36 +344,77 @@ gameSpeed = Math.min(
   }
 
 
-  // --------------------------------------------
-  // 障害物を左へ移動
-  // --------------------------------------------
+// --------------------------------------------
+// 障害物を左へ移動
+// --------------------------------------------
+
+for (let i = obstacles.length - 1; i >= 0; i--) {
+  const obstacle = obstacles[i];
 
   obstacle.x -= gameSpeed * (deltaTime / 16.67);
 
+  // 画面外に出た障害物を削除
+  if (obstacle.x + obstacle.width < 0) {
+    obstacles.splice(i, 1);
+  }
+}
 
-// 画面外に出たら、右側から再登場
-if (obstacle.x + obstacle.width < 0) {
 
-  // 50%の確率で2種類目の障害物にする
+// --------------------------------------------
+// 新しい障害物を追加
+// --------------------------------------------
+
+// 一番右にある障害物を探す
+let rightmostObstacle = null;
+
+for (const obstacle of obstacles) {
+  if (
+    rightmostObstacle === null ||
+    obstacle.x > rightmostObstacle.x
+  ) {
+    rightmostObstacle = obstacle;
+  }
+}
+
+// 障害物がなくなったら、新しいものを作る
+if (rightmostObstacle === null) {
+  rightmostObstacle = {
+    x: GAME_CONFIG.width,
+    y: GAME_CONFIG.groundY - GAME_CONFIG.obstacleHeight,
+    width: 64,
+    height: GAME_CONFIG.obstacleHeight,
+    image: images.obstacle
+  };
+
+  obstacles.push(rightmostObstacle);
+}
+
+// 一番右の障害物が十分近づいたら、次を追加
+if (
+  rightmostObstacle.x <
+  GAME_CONFIG.width + 250
+) {
+  const obstacleGap = getRandomObstacleGap();
+
   const useSecondObstacle = Math.random() < 0.5;
 
-  if (useSecondObstacle) {
-    obstacle.image = images.obstacle2;
-    obstacle.width = 100;
-  } else {
-    obstacle.image = images.obstacle;
-    obstacle.width = 64;
-  }
+  const newObstacle = {
+    x: rightmostObstacle.x +
+       rightmostObstacle.width +
+       obstacleGap,
 
-// ランダムな間隔を空けて右側から再登場
-const obstacleGap = getRandomObstacleGap();
+    y: GAME_CONFIG.groundY - GAME_CONFIG.obstacleHeight,
 
-obstacle.x =
-  GAME_CONFIG.width + obstacleGap;
+    width: useSecondObstacle ? 100 : 64,
 
-  // 地面に合わせる
-  obstacle.y =
-    GAME_CONFIG.groundY - obstacle.height;
+    height: GAME_CONFIG.obstacleHeight,
+
+    image: useSecondObstacle
+      ? images.obstacle2
+      : images.obstacle
+  };
+
+  obstacles.push(newObstacle);
 }
 
   // --------------------------------------------
@@ -387,9 +435,12 @@ obstacle.x =
   // 当たり判定
   // --------------------------------------------
 
+for (const obstacle of obstacles) {
   if (isColliding(player, obstacle)) {
     endGame();
+    return;
   }
+}
 }
 
 
@@ -462,14 +513,15 @@ function draw() {
 // 障害物
 // --------------------------------------------
 
-ctx.drawImage(
-  obstacle.image,
-  obstacle.x,
-  obstacle.y,
-  obstacle.width,
-  obstacle.height
-);
-
+for (const obstacle of obstacles) {
+  ctx.drawImage(
+    obstacle.image,
+    obstacle.x,
+    obstacle.y,
+    obstacle.width,
+    obstacle.height
+  );
+}
 
 // --------------------------------------------
 // キャラクター
