@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.9";
+const GAME_VERSION = "v0.1.10";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -72,7 +72,11 @@ const images = {
   playerRun1: loadImage("images/player_run1.png"),
   playerRun2: loadImage("images/player_run2.png"),
   playerJump: loadImage("images/player_jump.png"),
+
+  // 障害物
   obstacle: loadImage("images/obstacle.png"),
+  obstacle2: loadImage("images/obstacle2.png"),
+
   background: loadImage("images/background.png")
 };
 
@@ -131,7 +135,10 @@ const obstacle = {
   y: GAME_CONFIG.groundY - GAME_CONFIG.obstacleHeight,
 
   width: GAME_CONFIG.obstacleWidth,
-  height: GAME_CONFIG.obstacleHeight
+  height: GAME_CONFIG.obstacleHeight,
+
+  // 現在表示している障害物の画像
+  image: images.obstacle
 };
 
 
@@ -311,11 +318,27 @@ gameSpeed = Math.min(
   obstacle.x -= gameSpeed * (deltaTime / 16.67);
 
 
-  // 画面外に出たら右側から再登場
-  if (obstacle.x + obstacle.width < 0) {
-    obstacle.x = GAME_CONFIG.width + 100;
+// 画面外に出たら、右側から再登場
+if (obstacle.x + obstacle.width < 0) {
+
+  // 50%の確率で2種類目の障害物にする
+  const useSecondObstacle = Math.random() < 0.5;
+
+  if (useSecondObstacle) {
+    obstacle.image = images.obstacle2;
+    obstacle.width = 100;
+  } else {
+    obstacle.image = images.obstacle;
+    obstacle.width = 64;
   }
 
+  // 右側から再登場
+  obstacle.x = GAME_CONFIG.width + 100;
+
+  // 地面に合わせる
+  obstacle.y =
+    GAME_CONFIG.groundY - obstacle.height;
+}
 
   // --------------------------------------------
   // 背景をスクロール
@@ -406,18 +429,17 @@ function draw() {
   drawBackground();
 
 
-  // --------------------------------------------
-  // 障害物
-  // --------------------------------------------
+// --------------------------------------------
+// 障害物
+// --------------------------------------------
 
-
-  ctx.drawImage(
-    images.obstacle,
-    obstacle.x,
-    obstacle.y,
-    obstacle.width,
-    obstacle.height
-  );
+ctx.drawImage(
+  obstacle.image,
+  obstacle.x,
+  obstacle.y,
+  obstacle.width,
+  obstacle.height
+);
 
 
 // --------------------------------------------
