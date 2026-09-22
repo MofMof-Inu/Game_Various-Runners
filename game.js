@@ -411,40 +411,37 @@ function draw() {
   );
 
 
-  // --------------------------------------------
-  // キャラクター
-  // --------------------------------------------
+// --------------------------------------------
+// キャラクター
+// --------------------------------------------
 
-  let playerImage;
+let playerImage;
 
-  if (player.isJumping) {
-    playerImage = images.playerJump;
-  } else if (player.animationFrame === 0) {
-    playerImage = images.playerRun1;
-  } else {
-    playerImage = images.playerRun2;
-  }
+if (player.isJumping) {
+  playerImage = images.playerJump;
+} else if (player.animationFrame === 0) {
+  playerImage = images.playerRun1;
+} else {
+  playerImage = images.playerRun2;
+}
 
+// 主人公を描画
+ctx.drawImage(
+  playerImage,
+  player.x,
+  player.y,
+  player.width,
+  player.height
+);
+
+// 主人公の物理的な範囲を赤い箱で表示
 ctx.fillStyle = "red";
-ctx.fillRect(player.x, player.y, player.width, player.height);
-    
-  // 主人公を描画
-  ctx.drawImage(
-    playerImage,
-    player.x,
-    player.y,
-    player.width,
-    player.height
-  );
-
-  // 主人公の物理的な範囲を赤い箱で表示
-  ctx.fillStyle = "red";
-  ctx.fillRect(
-    player.x,
-    player.y,
-    player.width,
-    player.height
-  );
+ctx.fillRect(
+  player.x,
+  player.y,
+  player.width,
+  player.height
+);
   
 }
 
