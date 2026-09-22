@@ -24,13 +24,13 @@ const GAME_CONFIG = {
   groundY: 330,
 
   // ゲーム開始時の速度
-  obstacleSpeed: 6,
+  obstacleSpeed: 8,
 
   // 時間経過による速度アップ
   speedIncrease: 0.0005,
 
   // 重力
-  gravity: 0.7,
+  gravity: 0.5,
 
   // ジャンプの強さ
   jumpPower: -40,
