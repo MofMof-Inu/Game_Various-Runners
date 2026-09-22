@@ -433,15 +433,6 @@ ctx.drawImage(
   player.width,
   player.height
 );
-
-// 主人公の物理的な範囲を赤い箱で表示
-ctx.fillStyle = "red";
-ctx.fillRect(
-  player.x,
-  player.y,
-  player.width,
-  player.height
-);
   
 }
 
