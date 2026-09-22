@@ -345,8 +345,8 @@ function isColliding(a, b) {
   const playerMarginY = 20;
 
   // 障害物側の当たり判定
-  const obstacleMarginX = 20;
-  const obstacleMarginY = 20;
+  const obstacleMarginX = 10;
+  const obstacleMarginY = 10;
 
   return (
     a.x + playerMarginX < b.x + b.width - obstacleMarginX &&
