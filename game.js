@@ -33,15 +33,15 @@ const GAME_CONFIG = {
   gravity: 0.9,
 
   // ジャンプの強さ
-  jumpPower: -14,
+  jumpPower: -20,
 
   // キャラクターの表示サイズ
   playerWidth: 128,
   playerHeight: 128,
 
   // 障害物の表示サイズ
-  obstacleWidth: 128,
-  obstacleHeight: 128
+  obstacleWidth: 64,
+  obstacleHeight: 64
 };
 
 
