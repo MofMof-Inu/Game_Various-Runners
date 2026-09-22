@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.10";
+const GAME_VERSION = "v0.1.11";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -33,8 +33,14 @@ const GAME_CONFIG = {
   // 時間経過による速度アップ
   speedIncrease: 0.0005,
 
+  // 障害物同士の間隔
+  // 前の障害物が画面外に消えてから、
+  // 次の障害物が登場するまでの距離です。
+  minObstacleGap: 600,
+  maxObstacleGap: 1000,
+
   // 重力
-  gravity: 1.2,
+  gravity: 1.3,
 
   // ジャンプの強さ
   jumpPower: -20,
@@ -148,6 +154,16 @@ const obstacle = {
 
 let backgroundX = 0;
 
+// ============================================================
+// 障害物の間隔をランダムに決める
+// ============================================================
+
+function getRandomObstacleGap() {
+  const min = GAME_CONFIG.minObstacleGap;
+  const max = GAME_CONFIG.maxObstacleGap;
+
+  return Math.random() * (max - min) + min;
+}
 
 // ============================================================
 // 8. ゲーム開始
@@ -332,8 +348,11 @@ if (obstacle.x + obstacle.width < 0) {
     obstacle.width = 64;
   }
 
-  // 右側から再登場
-  obstacle.x = GAME_CONFIG.width + 100;
+// ランダムな間隔を空けて右側から再登場
+const obstacleGap = getRandomObstacleGap();
+
+obstacle.x =
+  GAME_CONFIG.width + obstacleGap;
 
   // 地面に合わせる
   obstacle.y =
