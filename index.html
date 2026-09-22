@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Pixel Runner</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="game-page">
+    <h1 class="game-title">My Pixel Runner</h1>
+
+    <div class="game-wrapper">
+      <canvas id="gameCanvas" width="800" height="400">
+        お使いのブラウザはCanvasに対応していません。
+      </canvas>
+
+      <div id="gameMessage" class="game-message">
+        <div id="messageTitle">PIXEL RUNNER</div>
+        <div id="messageText">スペースキーまたは画面タップでスタート</div>
+      </div>
+    </div>
+
+    <div class="game-info">
+      <span>SCORE: <strong id="score">0</strong></span>
+      <span>HIGH SCORE: <strong id="highScore">0</strong></span>
+    </div>
+
+    <p class="controls">
+      PC：スペースキーでジャンプ ／ スマホ：画面タップでジャンプ
+    </p>
+  </main>
+
+  <script src="game.js"></script>
+</body>
+</html>
