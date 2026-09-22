@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.11";
+const GAME_VERSION = "v0.1.12";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -30,8 +30,8 @@ const GAME_CONFIG = {
   // ゲーム中の最高速度
   maxObstacleSpeed: 12,
 
-  // 時間経過による速度アップ
-  speedIncrease: 0.0005,
+// 時間経過による速度アップ
+speedIncrease: 0.0008,
 
   // 障害物同士の間隔
   // 前の障害物が画面外に消えてから、
@@ -159,10 +159,20 @@ let backgroundX = 0;
 // ============================================================
 
 function getRandomObstacleGap() {
-  const min = GAME_CONFIG.minObstacleGap;
-  const max = GAME_CONFIG.maxObstacleGap;
+  const random = Math.random();
 
-  return Math.random() * (max - min) + min;
+  // 30%：密
+  if (random < 0.3) {
+    return 450 + Math.random() * 150;
+  }
+
+  // 40%：普通
+  if (random < 0.7) {
+    return 600 + Math.random() * 200;
+  }
+
+  // 30%：疎
+  return 900 + Math.random() * 300;
 }
 
 // ============================================================
