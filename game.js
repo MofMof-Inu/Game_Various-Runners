@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.3";
+const GAME_VERSION = "v0.1.4";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -448,10 +448,7 @@ ctx.fillText(GAME_VERSION, 10, 20);
 // ============================================================
 
 function drawBackground() {
-  const background = images.background;
-
-  // 毎フレーム、まず画面全体を白で塗り直す
-  // これによって前のフレームの障害物が残らない
+  // まず画面全体を白にする
   ctx.fillStyle = "white";
   ctx.fillRect(
     0,
@@ -460,31 +457,14 @@ function drawBackground() {
     GAME_CONFIG.height
   );
 
-  // 背景画像がまだ読み込まれていない場合
-  if (!background.complete || background.naturalWidth === 0) {
-    return;
-  }
+  // 地面の線を直接描く
+  ctx.strokeStyle = "#000000";
+  ctx.lineWidth = 2;
 
-  const width = background.naturalWidth;
-  const height = GAME_CONFIG.height;
-
-  // 背景画像は透明なので、
-  // 白い画面の上に「地面の線」だけが描かれる
-  ctx.drawImage(
-    background,
-    backgroundX,
-    0,
-    width,
-    height
-  );
-
-  ctx.drawImage(
-    background,
-    backgroundX + width,
-    0,
-    width,
-    height
-  );
+  ctx.beginPath();
+  ctx.moveTo(0, 336);
+  ctx.lineTo(GAME_CONFIG.width, 336);
+  ctx.stroke();
 }
 
 
