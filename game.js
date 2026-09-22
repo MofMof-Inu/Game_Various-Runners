@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.16";
+const GAME_VERSION = "v0.1.18";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -31,7 +31,7 @@ const GAME_CONFIG = {
   maxObstacleSpeed: 12,
 
 // 時間経過による速度アップ
-speedIncrease: 0.0008,
+speedIncrease: 0.0005,
 
   // 障害物同士の間隔
   // 前の障害物が画面外に消えてから、
