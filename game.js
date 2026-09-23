@@ -320,9 +320,11 @@ gameSpeed = Math.min(
 
 const timeScale = deltaTime / 16.67;
 
-player.velocityY += GAME_CONFIG.gravity * timeScale;
-player.y += player.velocityY * timeScale;
+player.y +=
+  player.velocityY * timeScale +
+  GAME_CONFIG.gravity * timeScale * (timeScale + 1) / 2;
 
+player.velocityY += GAME_CONFIG.gravity * timeScale;
 
   // 地面に着いたら止める
   const groundPlayerY =
