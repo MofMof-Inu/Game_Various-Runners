@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.39";
+const GAME_VERSION = "v0.1.40";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -43,7 +43,7 @@ speedIncrease: 0.0005,
   gravity: 1.8,
 
   // ジャンプの強さ
-  jumpPower: -22,
+  jumpPower: -21,
 
   // キャラクターの表示サイズ
   playerWidth: 128,
