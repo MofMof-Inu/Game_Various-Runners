@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.37";
+const GAME_VERSION = "v0.1.38";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -397,8 +397,14 @@ if (goalWaiting && obstacles.length === 0) {
 
 if (goalStarted && !goalWaiting) {
   houseX -= gameSpeed * (deltaTime / 16.67);
-}
 
+  // 家が画面右側の所定位置まで来たら止める
+  const houseStopX = 550;
+
+  if (houseX <= houseStopX) {
+    houseX = houseStopX;
+  }
+}
   
 // --------------------------------------------
 // 新しい障害物を追加
