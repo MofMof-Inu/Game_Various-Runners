@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.27";
+const GAME_VERSION = "v0.1.28";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -78,12 +78,11 @@ const images = {
   playerRun1: loadImage("images/player_run1.png"),
   playerRun2: loadImage("images/player_run2.png"),
   playerJump: loadImage("images/player_jump.png"),
-
-  // 障害物
   obstacle: loadImage("images/obstacle.png"),
   obstacle2: loadImage("images/obstacle2.png"),
-
-  background: loadImage("images/background.png")
+  background: loadImage("images/background.png"),
+  houseClosed: loadImage("images/house_closed.png"),
+  houseOpen: loadImage("images/house_open.png")
 };
 
 function loadImage(path) {
@@ -104,6 +103,10 @@ let gameState = "ready";
 
 let score = 0;
 let gameElapsedTime = 0;
+
+let goalStarted = false;
+let houseX = GAME_CONFIG.width;
+
 let highScore = Number(localStorage.getItem("pixelRunnerHighScore")) || 0;
 
 let gameSpeed = GAME_CONFIG.obstacleSpeed;
@@ -189,6 +192,9 @@ function startGame() {
 score = 0;
 gameElapsedTime = 0;
 gameSpeed = GAME_CONFIG.obstacleSpeed;
+
+goalStarted = false;
+houseX = GAME_CONFIG.width;
   
   player.y = GAME_CONFIG.groundY - player.height;
   player.velocityY = 0;
@@ -298,9 +304,12 @@ function update(deltaTime) {
 
   scoreElement.textContent = Math.floor(score);
 
-  if (gameElapsedTime >= 15) {
-    console.log("55秒経過！");
-  }
+if (gameElapsedTime >= 10 && !goalStarted) {
+  console.log("55秒経過！");
+  goalStarted = true;
+  obstacles.length = 0;
+  houseX = GAME_CONFIG.width;
+}
 
 // --------------------------------------------
 // ゲーム速度
@@ -531,6 +540,22 @@ for (const obstacle of obstacles) {
   );
 }
 
+  if (goalStarted) {
+  const houseWidth = 250;
+  const houseHeight = 250;
+
+  const houseY = GAME_CONFIG.groundY - houseHeight;
+
+  ctx.drawImage(
+    images.houseClosed,
+    houseX,
+    houseY,
+    houseWidth,
+    houseHeight
+  );
+}
+
+  
 // --------------------------------------------
 // キャラクター
 // --------------------------------------------
