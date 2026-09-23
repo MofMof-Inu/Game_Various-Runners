@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.29";
+const GAME_VERSION = "v0.1.30";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -307,7 +307,6 @@ function update(deltaTime) {
 if (gameElapsedTime >= 15 && !goalStarted) {
   console.log("15秒経過！");
   goalStarted = true;
-  obstacles.length = 0;
   houseX = 500;
 }
 
@@ -388,7 +387,7 @@ for (const obstacle of obstacles) {
   }
 }
 
-// 55秒までは新しい障害物を追加する
+// 15秒までは新しい障害物を追加する
 if (gameElapsedTime < 15 && !goalStarted) {
 
   // 障害物がなくなったら、新しいものを作る
