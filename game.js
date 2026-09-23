@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.26";
+const GAME_VERSION = "v0.1.27";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -43,7 +43,7 @@ speedIncrease: 0.0005,
   gravity: 1.8,
 
   // ジャンプの強さ
-  jumpPower: -20,
+  jumpPower: -23,
 
   // キャラクターの表示サイズ
   playerWidth: 128,
@@ -318,14 +318,9 @@ gameSpeed = Math.min(
   // キャラクターの重力
   // --------------------------------------------
 
-const timeScale = deltaTime / 16.67;
-
-player.y +=
-  player.velocityY * timeScale +
-  GAME_CONFIG.gravity * timeScale * (timeScale + 1) / 2;
-
-player.velocityY += GAME_CONFIG.gravity * timeScale;
-
+player.velocityY += GAME_CONFIG.gravity;
+player.y += player.velocityY;
+  
   // 地面に着いたら止める
   const groundPlayerY =
     GAME_CONFIG.groundY - player.height;
