@@ -43,7 +43,7 @@ speedIncrease: 0.0005,
   gravity: 1.9,
 
   // ジャンプの強さ
-  jumpPower: -22,
+  jumpPower: -21,
 
   // キャラクターの表示サイズ
   playerWidth: 128,
