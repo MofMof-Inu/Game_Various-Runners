@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.25";
+const GAME_VERSION = "v0.1.26";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
