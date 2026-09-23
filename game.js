@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.35";
+const GAME_VERSION = "v0.1.36";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -109,6 +109,8 @@ let houseX = GAME_CONFIG.width;
 
 let goalWaiting = false;
 let goalWaitTimer = 0;
+const goalWaitDuration = 3000;
+
 
 let highScore = Number(localStorage.getItem("pixelRunnerHighScore")) || 0;
 
@@ -377,11 +379,27 @@ for (let i = obstacles.length - 1; i >= 0; i--) {
 }
 
 if (goalWaiting && obstacles.length === 0) {
-  goalWaiting = false;
-  goalWaitTimer = 0;
-  console.log("最後の花が消えた！");
+
+  // 最後の花が消えた瞬間からタイマー開始
+  goalWaitTimer += deltaTime;
+
+  // 3秒経過したら家を登場させる
+  if (goalWaitTimer >= goalWaitDuration) {
+    goalWaiting = false;
+    goalWaitTimer = 0;
+    console.log("3秒経過！家が登場します");
+  }
 }
 
+  // --------------------------------------------
+// ゴールの家を右から左へ移動
+// --------------------------------------------
+
+if (goalStarted && !goalWaiting) {
+  houseX -= gameSpeed * (deltaTime / 16.67);
+}
+
+  
 // --------------------------------------------
 // 新しい障害物を追加
 // --------------------------------------------
