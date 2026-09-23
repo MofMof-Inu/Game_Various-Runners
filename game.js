@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.32";
+const GAME_VERSION = "v0.1.33";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -550,7 +550,7 @@ for (const obstacle of obstacles) {
   );
 }
 
-  if (goalStarted) {
+if (goalStarted && !goalWaiting) {
   const houseWidth = 250;
   const houseHeight = 250;
 
@@ -564,7 +564,6 @@ for (const obstacle of obstacles) {
     houseHeight
   );
 }
-
   
 // --------------------------------------------
 // キャラクター
