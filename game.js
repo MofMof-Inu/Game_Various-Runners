@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.28";
+const GAME_VERSION = "v0.1.29";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -43,7 +43,7 @@ speedIncrease: 0.0005,
   gravity: 1.8,
 
   // ジャンプの強さ
-  jumpPower: -23,
+  jumpPower: -22,
 
   // キャラクターの表示サイズ
   playerWidth: 128,
@@ -194,7 +194,7 @@ gameElapsedTime = 0;
 gameSpeed = GAME_CONFIG.obstacleSpeed;
 
 goalStarted = false;
-houseX = GAME_CONFIG.width;
+houseX = 500;
   
   player.y = GAME_CONFIG.groundY - player.height;
   player.velocityY = 0;
@@ -304,11 +304,11 @@ function update(deltaTime) {
 
   scoreElement.textContent = Math.floor(score);
 
-if (gameElapsedTime >= 10 && !goalStarted) {
-  console.log("55秒経過！");
+if (gameElapsedTime >= 15 && !goalStarted) {
+  console.log("15秒経過！");
   goalStarted = true;
   obstacles.length = 0;
-  houseX = GAME_CONFIG.width;
+  houseX = 500;
 }
 
 // --------------------------------------------
@@ -389,7 +389,7 @@ for (const obstacle of obstacles) {
 }
 
 // 55秒までは新しい障害物を追加する
-if (gameElapsedTime < 15) {
+if (gameElapsedTime < 15 && !goalStarted) {
 
   // 障害物がなくなったら、新しいものを作る
   if (rightmostObstacle === null) {
