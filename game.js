@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.31";
+const GAME_VERSION = "v0.1.32";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -197,7 +197,9 @@ gameElapsedTime = 0;
 gameSpeed = GAME_CONFIG.obstacleSpeed;
 
 goalStarted = false;
-houseX = 500;
+goalWaiting = false;
+goalWaitTimer = 0;
+houseX = GAME_CONFIG.width;
   
   player.y = GAME_CONFIG.groundY - player.height;
   player.velocityY = 0;
