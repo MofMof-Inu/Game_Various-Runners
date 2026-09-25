@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.52";
+const GAME_VERSION = "v0.1.53";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -136,6 +136,9 @@ const goalHouseWaitDuration = 500;
 
 // 扉の前まで進む位置
 const goalFinalTargetX = 550;
+
+// 犬が扉の前に到着してから暗転するまでの待ち時間
+const goalDoorWaitDuration = 400;
 
 // 暗転する時間
 const goalBlackoutDuration = 1500;
@@ -354,7 +357,7 @@ if (goalPhase === 0) {
 
   scoreElement.textContent = Math.floor(score);
 
-if (gameElapsedTime >= 15 && !goalStarted) {
+if (gameElapsedTime >= 8 && !goalStarted) {
   console.log("15秒経過！");
   goalStarted = true;
   goalWaiting = true;
@@ -534,17 +537,29 @@ else if (goalPhase === 6) {
 // ------------------------------------------------------------
 else if (goalPhase === 7) {
 
+  // 扉の前で停止
+  player.y = groundPlayerY;
+  player.velocityY = 0;
+  player.isJumping = false;
+
   goalPhaseTimer += deltaTime;
 
-  if (goalPhaseTimer >= goalBlackoutDuration) {
-
-    // 今はここで演出終了
-    // 後で「犬が家に入る」演出をここに追加する
+  // 0.4秒待ってから暗転
+  if (goalPhaseTimer >= goalDoorWaitDuration) {
     goalPhase = 8;
     goalPhaseTimer = 0;
   }
 }
 
+else if (goalPhase === 8) {
+
+  goalPhaseTimer += deltaTime;
+
+  if (goalPhaseTimer >= goalBlackoutDuration) {
+    goalPhase = 9;
+    goalPhaseTimer = 0;
+  }
+}
   
 // --------------------------------------------
 // キャラクターの走るアニメーション
