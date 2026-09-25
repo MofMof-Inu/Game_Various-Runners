@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.48";
+const GAME_VERSION = "v0.1.49";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -497,7 +497,7 @@ if (goalWaiting && obstacles.length === 0) {
 
 if (goalStarted && !goalWaiting) {
 
-  const houseStopX = 380;
+  const houseStopX = 550;
 
   // 家がまだ停止位置に着いていない間は移動
   if (houseX > houseStopX) {
@@ -513,7 +513,7 @@ if (goalStarted && !goalWaiting) {
       goalPhase = 1;
 
       // 犬が向かう扉の位置
-      goalPlayerTargetX = 550;
+      goalPlayerTargetX = 450;
 
       // 1秒待つためのタイマーを開始
       goalPhaseTimer = 0;
