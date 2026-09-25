@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.67";
+const GAME_VERSION = "v0.1.68";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -371,6 +371,8 @@ canvas.addEventListener("pointerdown", (event) => {
 
 // 「もう一度遊ぶ？」画面
 if (goalPhase === 12) {
+
+  console.log("クリック時 goalPhase =", goalPhase);
 
   // Canvasの表示サイズと内部サイズの違いを補正
   const rect = canvas.getBoundingClientRect();
