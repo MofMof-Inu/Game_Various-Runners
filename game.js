@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.62";
+const GAME_VERSION = "v0.1.63";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -368,81 +368,94 @@ canvas.addEventListener("pointerdown", (event) => {
     return;
   }
 
-  // 「もう一度遊ぶ？」画面
-  if (goalPhase === 12) {
+// 「もう一度遊ぶ？」画面
+if (goalPhase === 12) {
 
-// Yes
-if (
-  event.offsetX >= 250 &&
-  event.offsetX <= 400 &&
-  event.offsetY >= 250 &&
-  event.offsetY <= 320
-) {
-  // いったんゲームを完全に停止
-  gameState = "ready";
+  // Canvasの表示サイズと内部サイズの違いを補正
+  const rect = canvas.getBoundingClientRect();
 
-  if (animationId !== null) {
-    cancelAnimationFrame(animationId);
-    animationId = null;
-  }
+  const x =
+    (event.clientX - rect.left) *
+    (GAME_CONFIG.width / rect.width);
 
-  // ゲームの状態を最初に戻す
-  score = 0;
-  gameElapsedTime = 0;
-  gameSpeed = GAME_CONFIG.obstacleSpeed;
+  const y =
+    (event.clientY - rect.top) *
+    (GAME_CONFIG.height / rect.height);
 
-  goalStarted = false;
-  goalWaiting = false;
-  goalWaitTimer = 0;
 
-  houseX = GAME_CONFIG.width;
+  // Yes
+  if (
+    x >= 250 &&
+    x <= 400 &&
+    y >= 250 &&
+    y <= 320
+  ) {
+    // いったんゲームを完全に停止
+    gameState = "ready";
 
-  goalPhase = 0;
-  goalPhaseTimer = 0;
-  goalPlayerTargetX = 0;
-
-  doorOpen = false;
-
-  // 犬を最初の位置に戻す
-  player.x = 100;
-  player.y = GAME_CONFIG.groundY - player.height;
-  player.velocityY = 0;
-  player.isJumping = false;
-  player.animationTimer = 0;
-  player.animationFrame = 0;
-
-  // 障害物も最初の状態に戻す
-  obstacles.length = 1;
-  obstacles[0].x = GAME_CONFIG.width + 100;
-  obstacles[0].width = 64;
-  obstacles[0].height = GAME_CONFIG.obstacleHeight;
-  obstacles[0].image = images.obstacle;
-  obstacles[0].y =
-    GAME_CONFIG.groundY - obstacles[0].height;
-
-  // 背景を最初に戻す
-  backgroundX = 0;
-
-  // 最初の画面を表示
-  drawInitialScreen();
-
-  return;
-}
-
-    // No
-    if (
-      event.offsetX >= 450 &&
-      event.offsetX <= 600 &&
-      event.offsetY >= 250 &&
-      event.offsetY <= 320
-    ) {
-      goalPhase = 13;
-      return;
+    if (animationId !== null) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
     }
+
+    // ゲームの状態を最初に戻す
+    score = 0;
+    gameElapsedTime = 0;
+    gameSpeed = GAME_CONFIG.obstacleSpeed;
+
+    goalStarted = false;
+    goalWaiting = false;
+    goalWaitTimer = 0;
+
+    houseX = GAME_CONFIG.width;
+
+    goalPhase = 0;
+    goalPhaseTimer = 0;
+    goalPlayerTargetX = 0;
+
+    doorOpen = false;
+
+    // 犬を最初の位置に戻す
+    player.x = 100;
+    player.y = GAME_CONFIG.groundY - player.height;
+    player.velocityY = 0;
+    player.isJumping = false;
+    player.animationTimer = 0;
+    player.animationFrame = 0;
+
+    // 障害物も最初の状態に戻す
+    obstacles.length = 1;
+    obstacles[0].x = GAME_CONFIG.width + 100;
+    obstacles[0].width = 64;
+    obstacles[0].height = GAME_CONFIG.obstacleHeight;
+    obstacles[0].image = images.obstacle;
+    obstacles[0].y =
+      GAME_CONFIG.groundY - obstacles[0].height;
+
+    // 背景を最初に戻す
+    backgroundX = 0;
+
+    // 最初の画面を表示
+    drawInitialScreen();
 
     return;
   }
 
+
+  // No
+  if (
+    x >= 450 &&
+    x <= 600 &&
+    y >= 250 &&
+    y <= 320
+  ) {
+    goalPhase = 13;
+    return;
+  }
+
+  return;
+}
+  
   jump();
 });
 
