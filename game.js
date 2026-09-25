@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.57";
+const GAME_VERSION = "v0.1.58";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -128,8 +128,6 @@ const goalWaitDuration = 3000;
 // 11 = クレジット絵表示
 // 12 = 「もう一度犬をお散歩に行かせる？」
 // 13 = 終了画面
-
-let goalPhase = 0;
 
 let goalPhase = 0;
 let goalPhaseTimer = 0;
