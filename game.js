@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.59";
+const GAME_VERSION = "v0.1.60";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -324,10 +324,29 @@ document.addEventListener("keydown", (event) => {
   if (event.code === "Space") {
     // ページがスクロールするのを防ぐ
     event.preventDefault();
+
+    // エンディング絵 → クレジット
+    if (goalPhase === 10) {
+      goalPhase = 11;
+      return;
+    }
+
+    // クレジット → 「もう一度？」画面
+    if (goalPhase === 11) {
+      goalPhase = 12;
+      return;
+    }
+
+    // 「もう一度？」画面では
+    // スペースでは選択しない
+    if (goalPhase === 12) {
+      return;
+    }
+
+    // それ以外は通常どおりジャンプ
     jump();
   }
 });
-
 
 // ============================================================
 // 11. スマートフォン・マウス操作
