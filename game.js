@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.50";
+const GAME_VERSION = "v0.1.51";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -111,20 +111,37 @@ let goalWaiting = false;
 let goalWaitTimer = 0;
 const goalWaitDuration = 3000;
 
+// ゴール演出の段階
+// 0 = 通常プレイ
+// 1 = 犬停止（1秒）
+// 2 = ジャンプ
+// 3 = 着地後停止（1秒）
+// 4 = 家の前まで歩く
+// 5 = 家の前で停止（0.5秒）
+// 6 = 扉が開いたあと、扉まで歩く
+// 7 = 暗転
 let goalPhase = 0;
+
 let goalPlayerTargetX = 0;
 const goalPlayerSpeed = 3;
 
-let goalPhaseTimer = 0;
-
+// 1回目の停止時間
 const goalStartWaitDuration = 1000;
-const goalLandingWaitDuration = 700;
 
-// 2回目のジャンプ後に向かう、扉の真正面の位置
+// ジャンプ着地後の停止時間
+const goalLandingWaitDuration = 1000;
+
+// 家の前で停止する時間
+const goalHouseWaitDuration = 500;
+
+// 扉の前まで進む位置
 const goalFinalTargetX = 550;
 
 // 暗転する時間
 const goalBlackoutDuration = 1500;
+
+// 扉が開いているか
+let doorOpen = false;
 
 let highScore = Number(localStorage.getItem("pixelRunnerHighScore")) || 0;
 
@@ -217,8 +234,9 @@ goalWaiting = false;
 goalWaitTimer = 0;
 houseX = GAME_CONFIG.width;
 
-goalPhase = 0;  
+goalPhase = 0;
 goalPlayerTargetX = 0;
+doorOpen = false;
   
   player.y = GAME_CONFIG.groundY - player.height;
   player.velocityY = 0;
@@ -362,6 +380,9 @@ gameSpeed = Math.min(
 const groundPlayerY =
   GAME_CONFIG.groundY - player.height;
 
+// ============================================================
+// ゴール演出
+// ============================================================
 
 // 通常プレイ中
 if (goalPhase === 0) {
@@ -369,55 +390,103 @@ if (goalPhase === 0) {
   player.velocityY += GAME_CONFIG.gravity;
   player.y += player.velocityY;
 
-  // 地面に着いたら止める
   if (player.y >= groundPlayerY) {
     player.y = groundPlayerY;
     player.velocityY = 0;
     player.isJumping = false;
   }
-
 }
 
 
-// ゴール演出：その場でジャンプ
+// ------------------------------------------------------------
+// 1. 犬停止（1秒）
+// ------------------------------------------------------------
 else if (goalPhase === 1) {
 
-  // まず1秒、その場で待つ
+  player.y = groundPlayerY;
+  player.velocityY = 0;
+  player.isJumping = false;
+
   goalPhaseTimer += deltaTime;
 
   if (goalPhaseTimer >= goalStartWaitDuration) {
 
-    // 待ち終わったらジャンプ開始
+    // その場でジャンプ
     player.velocityY = GAME_CONFIG.jumpPower;
     player.isJumping = true;
 
     goalPhase = 2;
     goalPhaseTimer = 0;
   }
-
 }
 
 
-// ゴール演出：ジャンプして着地
+// ------------------------------------------------------------
+// 2. ジャンプ
+// ------------------------------------------------------------
 else if (goalPhase === 2) {
 
-  // ジャンプ中
   player.velocityY += GAME_CONFIG.gravity;
   player.y += player.velocityY;
 
-  // 着地したら、0.7秒待つ段階へ
   if (player.y >= groundPlayerY) {
+
     player.y = groundPlayerY;
     player.velocityY = 0;
     player.isJumping = false;
 
+    // 着地後の停止へ
+    goalPhase = 3;
+    goalPhaseTimer = 0;
+  }
+}
+
+
+// ------------------------------------------------------------
+// 3. 着地後、犬停止（1秒）
+// ------------------------------------------------------------
+else if (goalPhase === 3) {
+
+  player.y = groundPlayerY;
+  player.velocityY = 0;
+  player.isJumping = false;
+
+  goalPhaseTimer += deltaTime;
+
+  if (goalPhaseTimer >= goalLandingWaitDuration) {
+
+    // 家の前まで歩く
+    goalPhase = 4;
+    goalPhaseTimer = 0;
+  }
+}
+
+
+// ------------------------------------------------------------
+// 4. 家の前まで歩く
+// ------------------------------------------------------------
+else if (goalPhase === 4) {
+
+  player.y = groundPlayerY;
+  player.velocityY = 0;
+  player.isJumping = false;
+
+  player.x += goalPlayerSpeed * (deltaTime / 16.67);
+
+  if (player.x >= goalPlayerTargetX) {
+
+    player.x = goalPlayerTargetX;
+
+    // 家の前で0.5秒停止
     goalPhase = 5;
     goalPhaseTimer = 0;
   }
-
 }
 
-// ゴール演出：着地後、0.7秒その場で待つ
+
+// ------------------------------------------------------------
+// 5. 家の前で犬停止（0.5秒）
+// ------------------------------------------------------------
 else if (goalPhase === 5) {
 
   player.y = groundPlayerY;
@@ -426,107 +495,56 @@ else if (goalPhase === 5) {
 
   goalPhaseTimer += deltaTime;
 
-  // 0.7秒経ったら歩き始める
-  if (goalPhaseTimer >= goalLandingWaitDuration) {
-    goalPhase = 3;
-    goalPhaseTimer = 0;
-  }
+  if (goalPhaseTimer >= goalHouseWaitDuration) {
 
-}
+    // ここで扉を開く
+    doorOpen = true;
 
-// ゴール演出：扉へ歩く
-else if (goalPhase === 3) {
-
-  player.y = groundPlayerY;
-  player.velocityY = 0;
-  player.isJumping = false;
-
-  // 扉に向かってゆっくり歩く
-  player.x += goalPlayerSpeed * (deltaTime / 16.67);
-
-  // 扉の位置に着いたら停止
-  if (player.x >= goalPlayerTargetX) {
-    player.x = goalPlayerTargetX;
-    goalPhase = 4;
-  }
-
-}
-
-// ゴール演出：扉が開いた状態で1秒待つ
-else if (goalPhase === 4) {
-
-  player.y = groundPlayerY;
-  player.velocityY = 0;
-  player.isJumping = false;
-
-  goalPhaseTimer += deltaTime;
-
-  // 1秒経ったら2回目のジャンプ
-  if (goalPhaseTimer >= goalStartWaitDuration) {
-
-    player.velocityY = GAME_CONFIG.jumpPower;
-    player.isJumping = true;
-
+    // 扉が開いた状態で、扉の前まで歩く
     goalPhase = 6;
     goalPhaseTimer = 0;
   }
-
 }
 
 
-// ゴール演出：2回目のジャンプ
+// ------------------------------------------------------------
+// 6. 扉が開いた状態で、扉の前までゆっくり歩く
+// ------------------------------------------------------------
 else if (goalPhase === 6) {
-
-  player.velocityY += GAME_CONFIG.gravity;
-  player.y += player.velocityY;
-
-  // 着地したら、扉の真正面へ歩く
-  if (player.y >= groundPlayerY) {
-
-    player.y = groundPlayerY;
-    player.velocityY = 0;
-    player.isJumping = false;
-
-    goalPhase = 7;
-  }
-
-}
-
-
-// ゴール演出：扉の真正面へ歩く
-else if (goalPhase === 7) {
 
   player.y = groundPlayerY;
   player.velocityY = 0;
   player.isJumping = false;
 
-  // ゆっくり歩く
   player.x += goalPlayerSpeed * (deltaTime / 16.67);
 
-  // 扉の真正面に着いたら停止して暗転開始
   if (player.x >= goalFinalTargetX) {
 
     player.x = goalFinalTargetX;
 
-    goalPhase = 8;
+    // 犬が扉に触れた瞬間、暗転開始
+    goalPhase = 7;
     goalPhaseTimer = 0;
   }
-
 }
 
 
-// ゴール演出：暗転
-else if (goalPhase === 8) {
+// ------------------------------------------------------------
+// 7. 暗転
+// ------------------------------------------------------------
+else if (goalPhase === 7) {
 
   goalPhaseTimer += deltaTime;
 
-  // 1.5秒経ったら次の演出へ
   if (goalPhaseTimer >= goalBlackoutDuration) {
-    goalPhase = 9;
+
+    // 今はここで演出終了
+    // 後で「犬が家に入る」演出をここに追加する
+    goalPhase = 8;
     goalPhaseTimer = 0;
   }
-
 }
+
   
 // --------------------------------------------
 // キャラクターの走るアニメーション
@@ -780,11 +798,11 @@ if (goalStarted && !goalWaiting) {
 
   const houseY = GAME_CONFIG.groundY - houseHeight + 15;
 
-  // phase 4以降は扉が開いた画像にする
-  const houseImage =
-    goalPhase >= 4
-      ? images.houseOpen
-      : images.houseClosed;
+// doorOpen が true になったら、以降ずっと開いた扉
+const houseImage =
+  doorOpen
+    ? images.houseOpen
+    : images.houseClosed;
 
   ctx.drawImage(
     houseImage,
