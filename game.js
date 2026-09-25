@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.60";
+const GAME_VERSION = "v0.1.61;
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -85,7 +85,8 @@ const images = {
   houseOpen: loadImage("images/house_open.png"),
   ending: loadImage("images/ending.png"),
   credits: loadImage("images/credits.png"),
-  endingSleep: loadImage("images/ending_sleep.png")
+  endingSleep: loadImage("images/ending_sleep.png"),
+  againBackground: loadImage("images/again_background.png")
 };
 
 function loadImage(path) {
@@ -1052,8 +1053,8 @@ if (goalPhase === 11) {
 }
 
 if (goalPhase === 12) {
-  ctx.fillStyle = "white";
-  ctx.fillRect(
+  ctx.drawImage(
+    images.againBackground,
     0,
     0,
     GAME_CONFIG.width,
