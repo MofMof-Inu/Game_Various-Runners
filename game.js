@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.55";
+const GAME_VERSION = "v0.1.56";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -82,7 +82,9 @@ const images = {
   obstacle2: loadImage("images/obstacle2.png"),
   background: loadImage("images/background.png"),
   houseClosed: loadImage("images/house_closed.png"),
-  houseOpen: loadImage("images/house_open.png")
+  houseOpen: loadImage("images/house_open.png"),
+  ending: loadImage("images/ending.png"),
+  credits: loadImage("images/credits.png")
 };
 
 function loadImage(path) {
@@ -121,6 +123,8 @@ const goalWaitDuration = 3000;
 // 7 = 扉まで歩く
 // 8 = 扉の前で停止（0.4秒）
 // 9 = 暗転
+// 10 = エンディング絵表示
+// 11 = クレジット絵表示
 
 let goalPhase = 0;
 let goalPhaseTimer = 0;
@@ -248,6 +252,7 @@ goalPhaseTimer = 0;
 goalPlayerTargetX = 0;
 doorOpen = false;
   
+  player.x = 100;
   player.y = GAME_CONFIG.groundY - player.height;
   player.velocityY = 0;
   player.isJumping = false;
@@ -327,6 +332,27 @@ document.addEventListener("keydown", (event) => {
 
 canvas.addEventListener("pointerdown", (event) => {
   event.preventDefault();
+
+  // エンディング絵表示中なら、クレジットへ
+  if (goalPhase === 10) {
+    goalPhase = 11;
+    return;
+  }
+
+  // クレジット表示中なら、最初の画面へ戻る
+  if (goalPhase === 11) {
+    gameState = "ready";
+    goalPhase = 0;
+    goalPhaseTimer = 0;
+    goalStarted = false;
+    goalWaiting = false;
+    doorOpen = false;
+    houseX = GAME_CONFIG.width;
+    player.x = 100;
+    drawInitialScreen();
+    return;
+  }
+
   jump();
 });
 
@@ -594,7 +620,13 @@ else if (goalPhase === 9) {
     goalPhaseTimer = 0;
   }
 }
-  
+
+else if (goalPhase === 10) {
+  // エンディング絵を表示して待つ
+}
+else if (goalPhase === 11) {
+  // クレジット絵を表示して待つ
+}
   
 // --------------------------------------------
 // キャラクターの走るアニメーション
@@ -892,9 +924,37 @@ ctx.drawImage(
 // ゴールの暗転
 // --------------------------------------------
 
-if (goalPhase === 9 || goalPhase === 10) {
+if (goalPhase === 9) {
   ctx.fillStyle = "black";
   ctx.fillRect(
+    0,
+    0,
+    GAME_CONFIG.width,
+    GAME_CONFIG.height
+  );
+}
+
+// --------------------------------------------
+// エンディング画面
+// --------------------------------------------
+
+if (goalPhase === 10) {
+  ctx.drawImage(
+    images.ending,
+    0,
+    0,
+    GAME_CONFIG.width,
+    GAME_CONFIG.height
+  );
+}
+
+// --------------------------------------------
+// クレジット画面
+// --------------------------------------------
+
+if (goalPhase === 11) {
+  ctx.drawImage(
+    images.credits,
     0,
     0,
     GAME_CONFIG.width,
@@ -906,7 +966,7 @@ if (goalPhase === 9 || goalPhase === 10) {
 ctx.fillStyle = "black";
 ctx.font = "14px sans-serif";
 ctx.fillText(GAME_VERSION, 10, 20);
-  
+
 }
 
 
