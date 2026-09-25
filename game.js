@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.41";
+const GAME_VERSION = "v0.1.42";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -578,7 +578,7 @@ if (goalStarted && !goalWaiting) {
   const houseWidth = 280;
   const houseHeight = 280;
 
-  const houseY = GAME_CONFIG.groundY - houseHeight;
+  const houseY = GAME_CONFIG.groundY - houseHeight + 15;
 
   ctx.drawImage(
     images.houseClosed,
