@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.58";
+const GAME_VERSION = "v0.1.59";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -351,25 +351,63 @@ canvas.addEventListener("pointerdown", (event) => {
   // 「もう一度遊ぶ？」画面
   if (goalPhase === 12) {
 
-    // Yes
-    if (
-      event.offsetX >= 250 &&
-      event.offsetX <= 400 &&
-      event.offsetY >= 250 &&
-      event.offsetY <= 320
-    ) {
-      gameState = "ready";
-      goalPhase = 0;
-      goalPhaseTimer = 0;
-      goalStarted = false;
-      goalWaiting = false;
-      doorOpen = false;
-      houseX = GAME_CONFIG.width;
-      player.x = 100;
+// Yes
+if (
+  event.offsetX >= 250 &&
+  event.offsetX <= 400 &&
+  event.offsetY >= 250 &&
+  event.offsetY <= 320
+) {
+  // いったんゲームを完全に停止
+  gameState = "ready";
 
-      drawInitialScreen();
-      return;
-    }
+  if (animationId !== null) {
+    cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+
+  // ゲームの状態を最初に戻す
+  score = 0;
+  gameElapsedTime = 0;
+  gameSpeed = GAME_CONFIG.obstacleSpeed;
+
+  goalStarted = false;
+  goalWaiting = false;
+  goalWaitTimer = 0;
+
+  houseX = GAME_CONFIG.width;
+
+  goalPhase = 0;
+  goalPhaseTimer = 0;
+  goalPlayerTargetX = 0;
+
+  doorOpen = false;
+
+  // 犬を最初の位置に戻す
+  player.x = 100;
+  player.y = GAME_CONFIG.groundY - player.height;
+  player.velocityY = 0;
+  player.isJumping = false;
+  player.animationTimer = 0;
+  player.animationFrame = 0;
+
+  // 障害物も最初の状態に戻す
+  obstacles.length = 1;
+  obstacles[0].x = GAME_CONFIG.width + 100;
+  obstacles[0].width = 64;
+  obstacles[0].height = GAME_CONFIG.obstacleHeight;
+  obstacles[0].image = images.obstacle;
+  obstacles[0].y =
+    GAME_CONFIG.groundY - obstacles[0].height;
+
+  // 背景を最初に戻す
+  backgroundX = 0;
+
+  // 最初の画面を表示
+  drawInitialScreen();
+
+  return;
+}
 
     // No
     if (
