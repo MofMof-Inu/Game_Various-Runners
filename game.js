@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.51";
+const GAME_VERSION = "v0.1.52";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -554,7 +554,9 @@ else if (goalPhase === 7) {
 // 走る画像を切り替える
 if (
   !player.isJumping &&
-  (goalPhase === 0 || goalPhase === 3)
+  (goalPhase === 0 ||
+   goalPhase === 4 ||
+   goalPhase === 6)
 ) {
   player.animationTimer += deltaTime;
 
