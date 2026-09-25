@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.61";
+const GAME_VERSION = "v0.1.62";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -945,18 +945,28 @@ function endGame() {
 // ============================================================
 
 function draw() {
-  // --------------------------------------------
-  // 背景
-  // --------------------------------------------
+  if (goalPhase === 13) {
+    ctx.clearRect(
+      0,
+      0,
+      GAME_CONFIG.width,
+      GAME_CONFIG.height
+    );
+
+    ctx.drawImage(
+      images.endingSleep,
+      0,
+      0,
+      GAME_CONFIG.width,
+      GAME_CONFIG.height
+    );
+
+    return;
+  }
 
   drawBackground();
 
-
-// --------------------------------------------
-// 障害物
-// --------------------------------------------
-
-for (const obstacle of obstacles) {
+  for (const obstacle of obstacles) {
   ctx.drawImage(
     obstacle.image,
     obstacle.x,
@@ -1088,15 +1098,6 @@ if (goalPhase === 12) {
   ctx.textAlign = "left";
 }
 
-if (goalPhase === 13) {
-  ctx.drawImage(
-    images.endingSleep,
-    0,
-    0,
-    GAME_CONFIG.width,
-    GAME_CONFIG.height
-  );
-}
   
 // 開発用バージョン表示
 ctx.fillStyle = "black";
