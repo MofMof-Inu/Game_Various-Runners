@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.54";
+const GAME_VERSION = "v0.1.55";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -123,6 +123,7 @@ const goalWaitDuration = 3000;
 // 9 = 暗転
 
 let goalPhase = 0;
+let goalPhaseTimer = 0;
 
 let goalPlayerTargetX = 0;
 const goalPlayerSpeed = 3;
@@ -243,6 +244,7 @@ goalWaitTimer = 0;
 houseX = GAME_CONFIG.width;
 
 goalPhase = 0;
+goalPhaseTimer = 0;
 goalPlayerTargetX = 0;
 doorOpen = false;
   
@@ -601,12 +603,10 @@ else if (goalPhase === 9) {
 // 通常プレイ中、またはゴール演出で歩いているときだけ
 // 走る画像を切り替える
 if (
-if (
   !player.isJumping &&
   (goalPhase === 0 ||
    goalPhase === 4 ||
    goalPhase === 7)
-) {
 ) {
   player.animationTimer += deltaTime;
 
