@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.42";
+const GAME_VERSION = "v0.1.43";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -111,6 +111,12 @@ let goalWaiting = false;
 let goalWaitTimer = 0;
 const goalWaitDuration = 3000;
 
+let goalPhase = 0;
+let goalPlayerTargetX = 0;
+const goalPlayerSpeed = 3;
+
+let goalPhaseTimer = 0;
+const goalStartWaitDuration = 1000;
 
 let highScore = Number(localStorage.getItem("pixelRunnerHighScore")) || 0;
 
@@ -202,6 +208,9 @@ goalStarted = false;
 goalWaiting = false;
 goalWaitTimer = 0;
 houseX = GAME_CONFIG.width;
+
+goalPhase = 0;  
+goalPlayerTargetX = 0;
   
   player.y = GAME_CONFIG.groundY - player.height;
   player.velocityY = 0;
@@ -235,6 +244,12 @@ obstacles[0].y =
 // ============================================================
 
 function jump() {
+
+  // ゴール演出中はプレイヤー操作を受け付けない
+  if (goalPhase > 0) {
+    return;
+  }
+
   // ゲーム開始前なら、まずゲームを開始
   if (gameState === "ready") {
     startGame();
@@ -330,24 +345,85 @@ gameSpeed = Math.min(
 );
 
 
-  // --------------------------------------------
-  // キャラクターの重力
-  // --------------------------------------------
+// --------------------------------------------
+// キャラクターの動き
+// --------------------------------------------
 
-player.velocityY += GAME_CONFIG.gravity;
-player.y += player.velocityY;
-  
+const groundPlayerY =
+  GAME_CONFIG.groundY - player.height;
+
+
+// 通常プレイ中
+if (goalPhase === 0) {
+
+  player.velocityY += GAME_CONFIG.gravity;
+  player.y += player.velocityY;
+
   // 地面に着いたら止める
-  const groundPlayerY =
-    GAME_CONFIG.groundY - player.height;
-
   if (player.y >= groundPlayerY) {
     player.y = groundPlayerY;
     player.velocityY = 0;
     player.isJumping = false;
   }
 
+}
 
+
+// ゴール演出：その場でジャンプ
+else if (goalPhase === 1) {
+
+  // まず1秒、その場で待つ
+  goalPhaseTimer += deltaTime;
+
+  if (goalPhaseTimer >= goalStartWaitDuration) {
+
+    // 待ち終わったらジャンプ開始
+    player.velocityY = GAME_CONFIG.jumpPower;
+    player.isJumping = true;
+
+    goalPhase = 2;
+    goalPhaseTimer = 0;
+  }
+
+}
+
+
+// ゴール演出：扉へ歩く
+else if (goalPhase === 2) {
+
+  // ジャンプ中
+  player.velocityY += GAME_CONFIG.gravity;
+  player.y += player.velocityY;
+
+  // 着地したら、歩く段階へ
+  if (player.y >= groundPlayerY) {
+    player.y = groundPlayerY;
+    player.velocityY = 0;
+    player.isJumping = false;
+
+    goalPhase = 3;
+  }
+
+}
+
+// ゴール演出：扉へ歩く
+else if (goalPhase === 3) {
+
+  player.y = groundPlayerY;
+  player.velocityY = 0;
+  player.isJumping = false;
+
+  // 扉に向かってゆっくり歩く
+  player.x += goalPlayerSpeed * (deltaTime / 16.67);
+
+  // 扉の位置に着いたら停止
+  if (player.x >= goalPlayerTargetX) {
+    player.x = goalPlayerTargetX;
+    goalPhase = 4;
+  }
+
+}
+  
   // --------------------------------------------
   // キャラクターの走るアニメーション
   // --------------------------------------------
@@ -391,18 +467,33 @@ if (goalWaiting && obstacles.length === 0) {
   }
 }
 
-  // --------------------------------------------
+// --------------------------------------------
 // ゴールの家を右から左へ移動
 // --------------------------------------------
 
 if (goalStarted && !goalWaiting) {
-  houseX -= gameSpeed * (deltaTime / 16.67);
 
-  // 家が画面右側の所定位置まで来たら止める
   const houseStopX = 550;
 
+  // 家がまだ停止位置に着いていない間は移動
+  if (houseX > houseStopX) {
+    houseX -= gameSpeed * (deltaTime / 16.67);
+  }
+
+  // 停止位置まで来たら止める
   if (houseX <= houseStopX) {
     houseX = houseStopX;
+
+    // 家が所定位置に着いたらゴール演出開始
+    if (goalPhase === 0) {
+      goalPhase = 1;
+
+      // 犬が向かう扉の位置
+      goalPlayerTargetX = 620;
+
+      // 1秒待つためのタイマーを開始
+      goalPhaseTimer = 0;
+    }
   }
 }
   
