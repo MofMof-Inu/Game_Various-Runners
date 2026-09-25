@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.45";
+const GAME_VERSION = "v0.1.46";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -117,6 +117,7 @@ const goalPlayerSpeed = 3;
 
 let goalPhaseTimer = 0;
 const goalStartWaitDuration = 1000;
+const goalLandingWaitDuration = 700;
 
 let highScore = Number(localStorage.getItem("pixelRunnerHighScore")) || 0;
 
@@ -388,20 +389,38 @@ else if (goalPhase === 1) {
 }
 
 
-// ゴール演出：扉へ歩く
+// ゴール演出：ジャンプして着地
 else if (goalPhase === 2) {
 
   // ジャンプ中
   player.velocityY += GAME_CONFIG.gravity;
   player.y += player.velocityY;
 
-  // 着地したら、歩く段階へ
+  // 着地したら、0.7秒待つ段階へ
   if (player.y >= groundPlayerY) {
     player.y = groundPlayerY;
     player.velocityY = 0;
     player.isJumping = false;
 
+    goalPhase = 5;
+    goalPhaseTimer = 0;
+  }
+
+}
+
+// ゴール演出：着地後、0.7秒その場で待つ
+else if (goalPhase === 5) {
+
+  player.y = groundPlayerY;
+  player.velocityY = 0;
+  player.isJumping = false;
+
+  goalPhaseTimer += deltaTime;
+
+  // 0.7秒経ったら歩き始める
+  if (goalPhaseTimer >= goalLandingWaitDuration) {
     goalPhase = 3;
+    goalPhaseTimer = 0;
   }
 
 }
