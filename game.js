@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.49";
+const GAME_VERSION = "v0.1.50";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -116,8 +116,15 @@ let goalPlayerTargetX = 0;
 const goalPlayerSpeed = 3;
 
 let goalPhaseTimer = 0;
+
 const goalStartWaitDuration = 1000;
 const goalLandingWaitDuration = 700;
+
+// 2回目のジャンプ後に向かう、扉の真正面の位置
+const goalFinalTargetX = 550;
+
+// 暗転する時間
+const goalBlackoutDuration = 1500;
 
 let highScore = Number(localStorage.getItem("pixelRunnerHighScore")) || 0;
 
@@ -322,7 +329,9 @@ function update(deltaTime) {
   // スコア
   // --------------------------------------------
 
- score += deltaTime * 0.01;
+if (goalPhase === 0) {
+  score += deltaTime * 0.01;
+}
   gameElapsedTime += deltaTime / 1000;
 
   scoreElement.textContent = Math.floor(score);
@@ -439,6 +448,82 @@ else if (goalPhase === 3) {
   if (player.x >= goalPlayerTargetX) {
     player.x = goalPlayerTargetX;
     goalPhase = 4;
+  }
+
+}
+
+// ゴール演出：扉が開いた状態で1秒待つ
+else if (goalPhase === 4) {
+
+  player.y = groundPlayerY;
+  player.velocityY = 0;
+  player.isJumping = false;
+
+  goalPhaseTimer += deltaTime;
+
+  // 1秒経ったら2回目のジャンプ
+  if (goalPhaseTimer >= goalStartWaitDuration) {
+
+    player.velocityY = GAME_CONFIG.jumpPower;
+    player.isJumping = true;
+
+    goalPhase = 6;
+    goalPhaseTimer = 0;
+  }
+
+}
+
+
+// ゴール演出：2回目のジャンプ
+else if (goalPhase === 6) {
+
+  player.velocityY += GAME_CONFIG.gravity;
+  player.y += player.velocityY;
+
+  // 着地したら、扉の真正面へ歩く
+  if (player.y >= groundPlayerY) {
+
+    player.y = groundPlayerY;
+    player.velocityY = 0;
+    player.isJumping = false;
+
+    goalPhase = 7;
+  }
+
+}
+
+
+// ゴール演出：扉の真正面へ歩く
+else if (goalPhase === 7) {
+
+  player.y = groundPlayerY;
+  player.velocityY = 0;
+  player.isJumping = false;
+
+  // ゆっくり歩く
+  player.x += goalPlayerSpeed * (deltaTime / 16.67);
+
+  // 扉の真正面に着いたら停止して暗転開始
+  if (player.x >= goalFinalTargetX) {
+
+    player.x = goalFinalTargetX;
+
+    goalPhase = 8;
+    goalPhaseTimer = 0;
+  }
+
+}
+
+
+// ゴール演出：暗転
+else if (goalPhase === 8) {
+
+  goalPhaseTimer += deltaTime;
+
+  // 1.5秒経ったら次の演出へ
+  if (goalPhaseTimer >= goalBlackoutDuration) {
+    goalPhase = 9;
+    goalPhaseTimer = 0;
   }
 
 }
@@ -695,8 +780,14 @@ if (goalStarted && !goalWaiting) {
 
   const houseY = GAME_CONFIG.groundY - houseHeight + 15;
 
+  // phase 4以降は扉が開いた画像にする
+  const houseImage =
+    goalPhase >= 4
+      ? images.houseOpen
+      : images.houseClosed;
+
   ctx.drawImage(
-    images.houseClosed,
+    houseImage,
     houseX,
     houseY,
     houseWidth,
@@ -727,6 +818,20 @@ ctx.drawImage(
   player.height
 );
 
+// --------------------------------------------
+// ゴールの暗転
+// --------------------------------------------
+
+if (goalPhase === 8 || goalPhase === 9) {
+  ctx.fillStyle = "black";
+  ctx.fillRect(
+    0,
+    0,
+    GAME_CONFIG.width,
+    GAME_CONFIG.height
+  );
+}
+  
 // 開発用バージョン表示
 ctx.fillStyle = "black";
 ctx.font = "14px sans-serif";
