@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.63";
+const GAME_VERSION = "v0.1.67";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -340,9 +340,10 @@ document.addEventListener("keydown", (event) => {
 
     // 「もう一度？」画面では
     // スペースでは選択しない
-    if (goalPhase === 12) {
-      return;
-    }
+  if (goalPhase === 12) {
+  event.preventDefault();
+  return;
+}
 
     // それ以外は通常どおりジャンプ
     jump();
