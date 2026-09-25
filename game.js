@@ -14,7 +14,7 @@
 // 1. ゲームの基本設定
 // ============================================================
 
-const GAME_VERSION = "v0.1.56";
+const GAME_VERSION = "v0.1.57";
 const GAME_CONFIG = {
   // Canvasの大きさ
   width: 800,
@@ -84,7 +84,8 @@ const images = {
   houseClosed: loadImage("images/house_closed.png"),
   houseOpen: loadImage("images/house_open.png"),
   ending: loadImage("images/ending.png"),
-  credits: loadImage("images/credits.png")
+  credits: loadImage("images/credits.png"),
+  endingSleep: loadImage("images/ending_sleep.png")
 };
 
 function loadImage(path) {
@@ -125,6 +126,10 @@ const goalWaitDuration = 3000;
 // 9 = 暗転
 // 10 = エンディング絵表示
 // 11 = クレジット絵表示
+// 12 = 「もう一度犬をお散歩に行かせる？」
+// 13 = 終了画面
+
+let goalPhase = 0;
 
 let goalPhase = 0;
 let goalPhaseTimer = 0;
@@ -339,17 +344,46 @@ canvas.addEventListener("pointerdown", (event) => {
     return;
   }
 
-  // クレジット表示中なら、最初の画面へ戻る
+  // クレジット表示中なら、「もう一度遊ぶ？」画面へ
   if (goalPhase === 11) {
-    gameState = "ready";
-    goalPhase = 0;
-    goalPhaseTimer = 0;
-    goalStarted = false;
-    goalWaiting = false;
-    doorOpen = false;
-    houseX = GAME_CONFIG.width;
-    player.x = 100;
-    drawInitialScreen();
+    goalPhase = 12;
+    return;
+  }
+
+  // 「もう一度遊ぶ？」画面
+  if (goalPhase === 12) {
+
+    // Yes
+    if (
+      event.offsetX >= 250 &&
+      event.offsetX <= 400 &&
+      event.offsetY >= 250 &&
+      event.offsetY <= 320
+    ) {
+      gameState = "ready";
+      goalPhase = 0;
+      goalPhaseTimer = 0;
+      goalStarted = false;
+      goalWaiting = false;
+      doorOpen = false;
+      houseX = GAME_CONFIG.width;
+      player.x = 100;
+
+      drawInitialScreen();
+      return;
+    }
+
+    // No
+    if (
+      event.offsetX >= 450 &&
+      event.offsetX <= 600 &&
+      event.offsetY >= 250 &&
+      event.offsetY <= 320
+    ) {
+      goalPhase = 13;
+      return;
+    }
+
     return;
   }
 
@@ -955,6 +989,52 @@ if (goalPhase === 10) {
 if (goalPhase === 11) {
   ctx.drawImage(
     images.credits,
+    0,
+    0,
+    GAME_CONFIG.width,
+    GAME_CONFIG.height
+  );
+}
+
+if (goalPhase === 12) {
+  ctx.fillStyle = "white";
+  ctx.fillRect(
+    0,
+    0,
+    GAME_CONFIG.width,
+    GAME_CONFIG.height
+  );
+
+  ctx.fillStyle = "black";
+  ctx.font = "28px sans-serif";
+  ctx.textAlign = "center";
+
+  ctx.fillText(
+    "もう一度犬をお散歩に行かせる？",
+    GAME_CONFIG.width / 2,
+    180
+  );
+
+  ctx.font = "24px sans-serif";
+
+  ctx.fillText(
+    "Yes",
+    325,
+    285
+  );
+
+  ctx.fillText(
+    "No",
+    525,
+    285
+  );
+
+  ctx.textAlign = "left";
+}
+
+if (goalPhase === 13) {
+  ctx.drawImage(
+    images.endingSleep,
     0,
     0,
     GAME_CONFIG.width,
